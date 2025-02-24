@@ -14,6 +14,7 @@ def create_tables():
         title VARCHAR(512),
         authorUserId BIGINT,
         isAnonymous BOOLEAN,
+        alreadySent BOOLEAN,
         createTime DATETIME,
         updateTime DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -1,6 +1,7 @@
+import os
 from config import ENABLE_WECHAT, ENABLE_DINGTALK
 from api.cc98_api import fetch_hot_topics
-from database.db_utils import update_database
+from database.db_utils import update_database, set_topic_sent
 from database.models import create_tables
 from utils.ding_talk import send_ding
 from utils.wechat_notify import send_wechat
@@ -43,10 +44,23 @@ def main():
                 content += fetch_LZ_markdown(id, statistics[id])
 
             # 发送钉钉和企业微信通知
-            if ENABLE_DINGTALK: send_ding("CC98 十大更新", content)
-            if ENABLE_WECHAT: send_wechat("CC98 十大更新", content)
+            if ENABLE_DINGTALK: 
+                send_ding("CC98 十大更新", content)
+            if ENABLE_WECHAT: 
+                send_wechat("CC98 十大更新", content)
+
+            for id, title, board in new_posts:
+                set_topic_sent(id)
     else:
         put_log("未获取到数据")
 
 if __name__ == "__main__":
-    main()
+    if os.path.exists('working.lock'):
+        put_log("上次运行未结束，退出")
+    else:
+        open('working.lock', 'w').close()
+        try:
+            main()
+        except Exception as e:
+            put_log(f"主程序运行出错: {e}")
+        os.remove('working.lock')

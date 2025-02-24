@@ -2,6 +2,7 @@ __pycache__/
 pictures/
 .venv/
 
+*.lock
 *.log
 *.txt
 config.py 

@@ -57,6 +57,11 @@ def store_comments(topic_id, comments:list):
     cursor.close()
     conn.close()
 
+def set_topic_sent(topic_id):
+    """设置已发送标记"""
+    execute_query("UPDATE hot_topics_static SET alreadySent=1 WHERE id=%s", (topic_id,))
+    put_log(f"设置 Topic {topic_id} 为已发送")
+
 def update_database(hot_topics):
     """
     更新数据库，并返回新增的 ID 与统计数据
@@ -65,7 +70,6 @@ def update_database(hot_topics):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    new_topic = []
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     for topic in hot_topics:
@@ -94,11 +98,10 @@ def update_database(hot_topics):
         if not exists:
             # 如果 id 不存在，插入到静态信息表
             cursor.execute("""
-                INSERT INTO hot_topics_static (id, boardName, title, authorUserId, isAnonymous, createTime)
-                VALUES (%s, %s, %s, %s, %s, %s)
-            """, (topic_id, board_name, title, author_user_id, is_anonymous, create_time))
-
-            new_topic.append((topic_id, title, board_name))
+                INSERT INTO hot_topics_static (id, boardName, title, authorUserId, isAnonymous, alreadySent, createTime)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (topic_id, board_name, title, author_user_id, is_anonymous, 0, create_time))
+            put_log(f"数据库新增 Topic {topic_id}: {title}")
 
         # 检查标题是否变化
         cursor.execute("SELECT title FROM hot_topics_static WHERE id=%s ORDER BY updateTime DESC LIMIT 1", (topic_id,))
@@ -119,7 +122,20 @@ def update_database(hot_topics):
             INSERT INTO hot_topics_dynamic (id, participantCount, replyCount, hitCount, updateTime)
             VALUES (%s, %s, %s, %s, %s)
         """, (topic_id, participant_count, reply_count, hit_count, now))
-
+    
+    # 检查还没有发送过的十大
+    cursor.execute("SELECT id, title, boardName FROM hot_topics_static WHERE alreadySent=0")
+    not_sent = cursor.fetchall()
+    new_topic = []
+    for topic_id, title, board_name in not_sent:
+        new_topic.append((topic_id, title, board_name))
+        if topic_id not in statistics:
+            statistics[topic_id] = {
+                "participantCount": '-',
+                "replyCount": '-',
+                "hitCount": '-',
+                "pastTitle": '',
+            }
     conn.commit()
     cursor.close()
     conn.close()

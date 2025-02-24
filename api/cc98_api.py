@@ -37,7 +37,7 @@ def read_cached_token():
             return f.read().strip()
     return None
 
-def fetch_cc98_api(url, need_auth=True, wait=3):
+def fetch_cc98_api(url, need_auth=True, wait=2):
     """获取 CC98 API 数据，自动处理 access_token 的缓存和更新"""
     headers = HEADERS.copy()
 
