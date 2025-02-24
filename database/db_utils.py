@@ -85,7 +85,7 @@ def update_database(hot_topics):
             "participantCount": participant_count,
             "replyCount": reply_count,
             "hitCount": hit_count,
-            "pastTitles": '',
+            "pastTitle": '',
         }
 
         # 检查该 ID 是否已存在
