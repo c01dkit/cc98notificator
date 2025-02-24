@@ -4,5 +4,5 @@ pictures/
 
 *.lock
 *.log
-*.txt
+access_token.txt
 config.py 

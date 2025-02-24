@@ -23,10 +23,16 @@ ENABLE_LLM_ABSTRACT = True    # 是否启用LLM摘要生成
 ABSTRACT_THRESHOLD = 700      # 若启用LLM摘要生成，超过摘要长度阈值后才进行摘要生成（默认生成150字左右摘要，若有变动请直接修改源码）
 LLM_MODEL = "deepseek-r1:32b" # 默认使用deepseek-r1:32b，可以自行修改
 
-# 钉钉机器人配置，用于消息推送
+# 钉钉机器人配置
 ENABLE_DINGTALK = True       # 是否启用钉钉机器人
-DINGTALK_SECRET = "SEC???"
-DINGTALK_ACCESS_TOKEN = "???"
+DINGTALK_CONFIGS = [         # 支持多个机器人
+    {
+        "tag": "xxx",        # 机器人标签
+        "enable": True,      # 是否启用
+        "secret": "???",
+        "access_token":"???",
+    },
+]
 
 # 企业微信推送配置
 ENABLE_WECHAT = True         # 是否启用企业微信推送
