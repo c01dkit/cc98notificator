@@ -80,7 +80,7 @@ crontab -e
 In the `crontab` editor, add the following line (replace `/path/to/project` with your actual project path):
 
 ```bash
-*/30 * * * * /bin/bash -c 'cd /path/to/project && source .venv/bin/activate && python main.py >> cc98hotTopics.log 2>&1'
+*/30 * * * * cd /path/to/project && source .venv/bin/activate && python main.py >> cc98hotTopics.log 2>&1
 ```
 
 然后保存并退出，使用以下命令检查任务是否正确添加：  

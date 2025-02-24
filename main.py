@@ -33,7 +33,7 @@ def main():
             # 展示当前十大
             content = "## CC98 当前十大\n\n"
             for post in hot_topics:
-                pastTitle = "原标题："+post['pastTitle'] if post['pastTitle'] else ""
+                pastTitle = "原标题："+statistics[post['id']]['pastTitle'] if statistics[post['id']]['pastTitle'] else ""
                 content += f"- 【{post['boardName']}】【{post['hitCount']}浏览 {post['replyCount']}回复】[{post['title']}](https://www.cc98.org/topic/{post['id']}){pastTitle}\n"
 
             # 展示新晋十大

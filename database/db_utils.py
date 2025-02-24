@@ -91,7 +91,6 @@ def update_database(hot_topics):
         # 检查该 ID 是否已存在
         cursor.execute("SELECT id FROM hot_topics_static WHERE id=%s", (topic_id,))
         exists = cursor.fetchone()
-
         if not exists:
             # 如果 id 不存在，插入到静态信息表
             cursor.execute("""
