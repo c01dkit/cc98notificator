@@ -1,0 +1,53 @@
+import subprocess
+
+def get_host_ip():
+    return subprocess.getoutput("ip route | grep default | awk '{print $3}'")
+
+# CC98 用户名和密码
+TOKEN_FILE = "access_token.txt"
+USER = '???'
+PASSWORD = '???'
+
+# 本地windows数据库连接配置
+DB_CONFIG = {
+    "host": get_host_ip(),   # 默认场景是wsl使用windows的mysql服务。其他情况请自行修改
+    "port": 3306,            # 根据实际情况进行配置。这里需要注意连接权限
+    "user": "???",           # mysql用户名
+    "password": "???",       # mysql用户对应的密码
+    "db": "???",             # 数据库名。代码不包含创建数据库的逻辑，请自行创建
+    "charset": "utf8mb4"
+}
+
+# LLM 模型配置，用于生成摘要
+ENABLE_LLM_ABSTRACT = True    # 是否启用LLM摘要生成
+ABSTRACT_THRESHOLD = 700      # 若启用LLM摘要生成，超过摘要长度阈值后才进行摘要生成（默认生成150字左右摘要，若有变动请直接修改源码）
+LLM_MODEL = "deepseek-r1:32b" # 默认使用deepseek-r1:32b，可以自行修改
+
+# 钉钉机器人配置，用于消息推送
+ENABLE_DINGTALK = True       # 是否启用钉钉机器人
+DINGTALK_SECRET = "SEC???"
+DINGTALK_ACCESS_TOKEN = "???"
+
+# 企业微信推送配置
+ENABLE_WECHAT = True         # 是否启用企业微信推送
+WECHAT_WEBHOOK_KEY = "????????-????-????-????????????????"
+
+# 阿里云OSS配置
+# 由于cc98图片链接在内网，钉钉无法加载，所以需要将图片上传到OSS；当然你也可以使用自己的公网服务器
+# 请先在阿里云OSS中创建一个Bucket，并且开启公共读权限
+# 然后在RAM中创建一个用户，并且授予OSS的读写权限
+# 最后将这些信息填写到下面的配置中
+ALIYUN_OSS_CONFIG = {
+    "ALI_RAM_USER": '???@???.onaliyun.com',
+    "ACCESSKEY_ID": '???',
+    "ACCESSKEY_SECRET": '???',
+    "ENDPOINT": '???.aliyuncs.com',
+    "BUCKET_NAME": '???'
+}
+
+# 伪造 User-Agent
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+    "Origin": "https://www.cc98.org",
+    "Referer": "https://www.cc98.org"
+}
